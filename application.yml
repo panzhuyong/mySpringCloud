@@ -1,15 +1,101 @@
+#加密配置
+jasypt:
+  encryptor:
+    password: juxw
+
+server:
+  tomcat:
+    max-threads: 500 # Maximum amount of worker threads.
+    min-spare-threads: 50 # Minimum amount of worker threads
+    uri-encoding: UTF-8
+
 spring:
-  profiles:
-    active:
-    - dev
----
-spring:
-  profiles: dev
-  application:
-    name: springcloud-config-dev
----
-spring:
-  profiles: test
-  application:
-    name: springcloud-config-test
-hhhhhhhhhhhhhhh
+  redis:
+    remote: false        #cachecloud 获取
+    host: 183.56.221.147
+    port: 16379
+  rabbitmq:
+    host: 183.56.221.147
+    port: 5672
+    username: rabbitmq
+    password: 123456
+  http:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  #jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+    serialization:
+      WRITE_NULL_MAP_VALUES: false
+redis:
+  cache:
+    expiration: 3601
+  timeout: 10000
+  maxIdle: 300
+  maxTotal: 600
+  maxWaitMillis: 1000
+  testOnBorrow: false
+
+ribbon:
+  eager-load:
+    enabled: true
+    clients: linkedu-auth,linkedu-base-service,linkedu-user-service
+  Httpclient:
+    enabled: false
+  OkHttp:
+    enabled: true
+  #走serviceid时生效，目前服务全部走serviceid
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+
+feign:
+  hystrix:
+    enabled: false
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      feignName:
+        connectTimeout: 30000
+        readTimeout: 30000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 500
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 800
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+
+#监控短点配置
+management:
+  security:
+    enabled: false
+endpoints:
+  actuator:
+    enabled: true
+  shutdown:
+    enabled: false
+
+#让所有请求走Zuulservlet,解决中文文件名乱码问题
+zuul:
+  servlet-path: /
